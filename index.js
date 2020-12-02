@@ -22,7 +22,7 @@ var monsters = [
 var app = document.querySelector('#app');
 
 // The number of monsters who have been found
-var count;
+var found; // 1st - wrong variable name
 
 //
 // Methods
@@ -73,9 +73,10 @@ var renderMonsters = function () {
     '<p>Click a door to reveal a monster. Try not to find the sock.</p>' +
     '<div class="row">' +
     monsters.map(function (monster, index) {
+
       var html =
         '<div class="grid">' +
-        '<button data-monster-id="img/' + index + '">' +
+        '<button data-monster-id="' + index + '">' +
         '<img alt="Click the door to see what\'s behind it" src="img/door.svg">' +
         '</button>' +
         '</div>';
@@ -117,7 +118,7 @@ var renderWon = function () {
 var clickHandler = function (event) {
 
   // If a "play again" button was clicked, reset the UI and end the callback function
-  if (event.target.hasAttribute('[data-monster-play-again]')) {
+  if (event.target.hasAttribute('data-monster-play-again')) { // 5th - unnecessary square brackets in passed attribute
     renderMonsters();
     return;
   }
@@ -125,15 +126,16 @@ var clickHandler = function (event) {
   // Check if clicked element or it's parent has a [data-monster-id] attribute
   // If not, it's not a monster
   // return and stop running our callback function
-  var monster = event.target.closest('data-monster-id');
+  var monster = event.target.closest('[data-monster-id]'); // 2nd - Missing square brackets in attribute
   if (!monster) return;
+
 
   // Get the monster's index in the array
   var id = monster.getAttribute('data-monster-id');
 
   // If the door reveals a sock, render the lost UI
   // Then, end the callback function
-  if (monsters[id] = 'socks') {
+  if (monsters[id] === 'sock') { // 3rd - = insted of === and; 4th - 'socks' insted 'sock'
     renderLost();
     return;
   }
@@ -141,7 +143,7 @@ var clickHandler = function (event) {
   // Update the HTML for the button's parent element
   // This will replace the button so that the content can't be clicked again
   // We'll use the id to get the monster from our shuffled array
-  monster.parentNode.innerHTML = '<img alt="' + monsters[id] + '" src="' + monsters[id] + '.svg">';
+  monster.parentNode.innerHTML = '<img alt="' + monsters[id] + '" src="img/' + monsters[id] + '.svg">';
 
   // Increase the number of monsters who have been found by 1
   found++;
